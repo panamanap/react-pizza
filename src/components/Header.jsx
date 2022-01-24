@@ -3,7 +3,6 @@ import logo from '../assets/img/pizza-logo.svg';
 import { Button } from '../components';
 
 export function Header() {
-
   return (
     <div className="header">
       <div className="container">
@@ -18,7 +17,7 @@ export function Header() {
         </Link>
         <Link to="/cart">
           <div className="header__cart">
-            <Button/>
+            <Button />
           </div>
         </Link>
       </div>

@@ -1,88 +1,110 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { addPizzaToCart } from '../../redux/actions/cart';
 
-export function PizzaBlock({ name, imageUrl, price, types, sizes }) {
-  const avilablesTypes = ["тонкое", "традиционное"];
-  const avilablesSizes = [26, 30, 40];
+const avilablesTypes = ['тонкое', 'традиционное'];
+const avilablesSizes = [26, 30, 40];
 
-  const [activeType, setActiveType] = useState(types[0]);
-  const [activeSize, setActiveSize] = useState()
- 
-  const onSelectType = (index) => {
-    setActiveType(index);
-  };
+export function PizzaBlock({ id, name, imageUrl, price, types, sizes }) {
+    const dispatch = useDispatch();
+    const [activeType, setActiveType] = useState(types[0]);
+    const [activeSize, setActiveSize] = useState(0);
+    const [disable, setDisable] = useState(false);
 
-  const onSelectSize = (index) => {
-    setActiveSize(index);
-  };
+    const onSelectType = (index) => {
+        if (disable) {
+            return;
+        }
+        setActiveType(index);
+    };
 
-  return (
-    <div className="pizza-block">
-      <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
-      <h4 className="pizza-block__title">{name}</h4>
-      <div className="pizza-block__selector">
-        <ul>
-          {avilablesTypes.map((type, index) => (
-            <li
-              key={type}
-              className={`${activeType === index && "active"}
-              ${!types.includes(index) && "disabled"}`}
-              onClick={() => onSelectType(index)}
-            >
-              {type}
-            </li>
-          ))}
-        </ul>
-        <ul>
-          {avilablesSizes.map((size, index) => (
-            <li
-              key={size}
-              className={`${activeSize === index && "active"}
-              ${!sizes.includes(size) && "disabled"}`}
-              onClick={() => onSelectSize(index)}
-            >
-              {size} см.
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="pizza-block__bottom">
-        <div className="pizza-block__price">от {price} ₽</div>
-        <div className="button button--outline button--add">
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10.8 4.8H7.2V1.2C7.2 0.5373 6.6627 0 6 0C5.3373 0 4.8 0.5373 4.8 1.2V4.8H1.2C0.5373 4.8 0 5.3373 0 6C0 6.6627 0.5373 7.2 1.2 7.2H4.8V10.8C4.8 11.4627 5.3373 12 6 12C6.6627 12 7.2 11.4627 7.2 10.8V7.2H10.8C11.4627 7.2 12 6.6627 12 6C12 5.3373 11.4627 4.8 10.8 4.8Z"
-              fill="white"
-            />
-          </svg>
-          <span>Добавить</span>
-          <i>2</i>
+    const onSelectSize = (index) => {
+        if (disable) {
+            return;
+        }
+        setActiveSize(index);
+    };
+
+    const addToCart = () => {
+        setDisable(!disable);
+        dispatch(addPizzaToCart(pizzaObj));
+    };
+
+    const pizzaObj = {
+        id,
+        imageUrl,
+        name,
+        price,
+        type: avilablesTypes[activeType],
+        size: avilablesSizes[activeSize],
+        number: 1,
+    };
+
+    return (
+        <div className="pizza-block">
+            <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+            <h4 className="pizza-block__title">{name}</h4>
+            <div className="pizza-block__selector">
+                <h4>Тип и размер теста: </h4>
+                <ul>
+                    {avilablesTypes.map((type, index) => (
+                        <li
+                            key={type}
+                            className={`${activeType === index && 'active'}
+              ${!types.includes(index) && 'disabled'} ${disable && 'disable'}`}
+                            onClick={() => onSelectType(index)}
+                        >
+                            {type}
+                        </li>
+                    ))}
+                </ul>
+
+                <ul>
+                    {avilablesSizes.map((size, index) => (
+                        <li
+                            key={size}
+                            className={`${activeSize === index && 'active'}
+              ${!sizes.includes(size) && 'disabled'} ${disable && 'disable'} `}
+                            onClick={() => onSelectSize(index)}
+                        >
+                            {size} см.
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <div className="pizza-block__bottom">
+                <div className="pizza-block__price"> от {price} руб.</div>
+                <button
+                    className={`${
+                        disable
+                            ? 'button--disbled'
+                            : 'button button--outline button--add'
+                    }`}
+                    onClick={addToCart}
+                    disabled={disable}
+                >
+                    <span>{disable ? 'Выбрана' : 'Выбрать'}</span>
+                </button>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 PizzaBlock.propTypes = {
-  name: PropTypes.string.isRequired,
-  imageUrl: PropTypes.string,
-  price: PropTypes.number,
-  types: PropTypes.arrayOf(PropTypes.number),
-  sizes: PropTypes.arrayOf(PropTypes.number),
-  isLoading:  PropTypes.bool,
+    name: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string,
+    price: PropTypes.number,
+    types: PropTypes.arrayOf(PropTypes.number),
+    sizes: PropTypes.arrayOf(PropTypes.number),
+    isLoading: PropTypes.bool,
 };
 
 PizzaBlock.defaultProps = {
-  name: "---",
-  price: 0,
-  types: [],
-  sizes: [],
-  isLoading: false,
-};  
+    name: '---',
+    price: 0,
+    types: [],
+    sizes: [],
+    isLoading: false,
+};

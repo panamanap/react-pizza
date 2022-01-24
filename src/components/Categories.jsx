@@ -17,8 +17,7 @@ export const Categories = React.memo(function Categories({ activeCategory, items
             key={`${item}__${index}`}
             onClick={() => onClickCategory(index)}
           >
-            {" "}
-            {item}{" "}
+            {item}
           </li>
         ))}
       </ul>
