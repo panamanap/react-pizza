@@ -4,15 +4,17 @@ import { Home, Cart } from './pages';
 
 function App() {
     return (
-        <div className="wrapper">
-            <Header />
-            <div className="content">
-                <Route path="/" exact>
-                    <Home />
-                </Route>
-                <Route path="/cart" exact>
-                    <Cart />
-                </Route>
+        <div className="appWrapper">
+            <div className="wrapper">
+                <Header />
+                <div className="content">
+                    <Route path="/" exact>
+                        <Home />
+                    </Route>
+                    <Route path="/cart" exact>
+                        <Cart />
+                    </Route>
+                </div>
             </div>
         </div>
     );

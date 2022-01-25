@@ -4,9 +4,6 @@ const initialState = {
     totalCount: 0,
 };
 
-// const getTotalPrice = (state, pizza) =>
-// pizza.reduce((sum, obj) => sum + obj.price, state.totalPrice);
-
 export const cart = (state = initialState, action) => {
     switch (action.type) {
         case 'ADD_PIZZA_CART': {
@@ -23,12 +20,15 @@ export const cart = (state = initialState, action) => {
             };
 
             const totalCount = state.totalCount + 1;
-            // const totalPrice = getTotalPrice(state, currentPizza);
+            const totalPrice = currentPizza.reduce(
+                (sum, obj) => sum + obj.price,
+                state.totalPrice
+            );
             return {
                 ...state,
                 items: newItem,
                 totalCount,
-                // totalPrice,
+                totalPrice,
             };
         }
         case 'INCREASE_PIZZA_COUNTER': {
@@ -45,19 +45,21 @@ export const cart = (state = initialState, action) => {
                 },
             };
 
-            // const totalPrice = getTotalPrice(
-            //     state,
-            //     state.items[action.payload].pizzas[0].price
-            // );
+            const totalCount = state.totalCount + 1;
+            const totalPrice =
+                state.totalPrice + state.items[action.payload].pizzas[0].price;
 
             return {
                 ...state,
                 items: newItems,
-                totalCount: state.totalCount + 1,
-                // totalPrice,
+                totalCount,
+                totalPrice,
             };
         }
         case 'REDUCE_PIZZA_COUNTER': {
+            if (state.items[action.payload].pizzas.length === 1) {
+                return state;
+            }
             const newPizzaItems =
                 state.items[action.payload].pizzas.length > 1
                     ? state.items[action.payload].pizzas.slice(1)
@@ -71,32 +73,34 @@ export const cart = (state = initialState, action) => {
                 },
             };
 
-            // const totalPrice = getTotalPrice(
-            //     state,
-            //     state.items[action.payload].pizzas[0].price
-            // );
-
             const totalCount =
                 state.items[action.payload].pizzas.length > 1
                     ? state.totalCount - 1
                     : state.totalCount;
+            const totalPrice =
+                state.totalPrice - state.items[action.payload].pizzas[0].price;
 
             return {
                 ...state,
                 items: newItems,
                 totalCount,
-                // totalPrice,
+                totalPrice,
             };
         }
         case 'REMOVE_ITEM': {
             const newItem = { ...state.items };
             const totalCount =
                 state.totalCount - newItem[action.payload].pizzas.length;
+            const totalPrice =
+                state.totalPrice -
+                newItem[action.payload].pizzas[0].price *
+                    newItem[action.payload].pizzas.length;
             delete newItem[action.payload];
             return {
                 ...state,
                 items: newItem,
                 totalCount,
+                totalPrice,
             };
         }
         case 'CLEAR_CART':

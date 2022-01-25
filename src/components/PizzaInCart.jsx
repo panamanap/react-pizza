@@ -97,7 +97,7 @@ export const PizzaInCart = ({
                 </div>
             </div>
             <div className="cart__item-price">
-                <b>{getPrice}</b>
+                <b>{getPrice} руб.</b>
             </div>
             <div className="cart__item-remove">
                 <div

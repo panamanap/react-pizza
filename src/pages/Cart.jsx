@@ -5,7 +5,7 @@ import { PizzaInCart } from '../components';
 import { clearCart } from '../redux/actions/cart';
 
 export function Cart() {
-    const { items, totalPrice } = useSelector(({ cart }) => cart);
+    const { items, totalPrice, totalCount } = useSelector(({ cart }) => cart);
     const dispatch = useDispatch();
 
     const onClearCart = () => {
@@ -103,7 +103,7 @@ export function Cart() {
                 <div className="cart__bottom">
                     <div className="cart__bottom-details">
                         <span>
-                            Всего пицц: <b>3 шт.</b>
+                            Всего пицц: <b>{totalCount} шт.</b>
                         </span>
                         <span>
                             Сумма заказа: <b> {totalPrice} руб.</b>{' '}

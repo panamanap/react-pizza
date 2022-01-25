@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { addPizzaToCart } from '../../redux/actions/cart';
+import { addPizzaToCart, removeItem } from '../../redux/actions/cart';
 
 const avilablesTypes = ['тонкое', 'традиционное'];
 const avilablesSizes = [26, 30, 40];
@@ -27,7 +27,7 @@ export function PizzaBlock({ id, name, imageUrl, price, types, sizes }) {
         setActiveSize(index);
     };
 
-    const addToCart = () => {
+    const onAddToCart = () => {
         setDisable(!disable);
         dispatch(addPizzaToCart(pizzaObj));
     };
@@ -82,7 +82,7 @@ export function PizzaBlock({ id, name, imageUrl, price, types, sizes }) {
                             ? 'button--disbled'
                             : 'button button--outline button--add'
                     }`}
-                    onClick={addToCart}
+                    onClick={onAddToCart}
                     disabled={disable}
                 >
                     <span>{disable ? 'Выбрана' : 'Выбрать'}</span>
